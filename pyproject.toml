@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corehealth-scribe-sdk"
+version = "1.0.0"
+description = "Corehealth by CorestreamNG — AI Scribe Python Backend SDK & Interoperability Client (openEHR & FHIR R4)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Corehealth by CorestreamNG", email = "hello@corestream.ng" }
+]
+keywords = ["corehealth", "corestreamng", "emr", "ehr", "ai-scribe", "openehr", "fhir", "healthcare"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Medical Science Apps."
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0"
+]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.100.0", "uvicorn>=0.20.0"]
+test = ["pytest>=7.0.0", "pytest-asyncio>=0.20.0"]
+
+[project.urls]
+Homepage = "https://corehealth.ng"
+Repository = "https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk"
+Documentation = "https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk/tree/main/docs"

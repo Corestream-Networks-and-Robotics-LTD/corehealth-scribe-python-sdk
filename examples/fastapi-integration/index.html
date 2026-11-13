@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner EMR Consultation Portal (Python/FastAPI SDK Demo)</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; padding: 24px; margin: 0; }
+    .container { max-width: 980px; margin: 0 auto; }
+    header { background: #fff; padding: 16px 24px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .patient-pill { background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .status-bar { padding: 8px 16px; background: #f1f5f9; border-radius: 6px; font-size: 13px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+    #mount-point { min-height: 480px; }
+    pre { background: #0f172a; color: #38bdf8; padding: 16px; border-radius: 6px; font-size: 12px; max-height: 360px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h2 style="margin: 0; font-size: 18px; color: #011b33;">Partner Consultation Workbench (Python SDK)</h2>
+        <span style="font-size: 12px; color: #64748b;">Powered by CoreHealth AI Scribe Python Proxy Router</span>
+      </div>
+      <div>
+        <span class="patient-pill">Patient: Oladipo Amina (#492)</span>
+        <span style="font-size: 13px; color: #64748b; margin-left: 8px;">Encounter #1017</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="status-bar">
+        <span class="dot"></span>
+        <strong id="status-text">Requesting SDK session token from FastAPI backend...</strong>
+      </div>
+
+      <div id="mount-point">
+        <!-- Sandboxed Scribe Studio iFrame Bridge -->
+        <iframe id="scribe-frame" style="width: 100%; height: 580px; border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);" allow="microphone"></iframe>
+      </div>
+    </div>
+
+    <div id="result-box" class="card" style="display: none;">
+      <h3 style="margin-top: 0; color: #011b33; font-size: 15px;">✓ Signed Clinical Data Received by FastAPI Proxy</h3>
+      <pre id="json-output"></pre>
+    </div>
+  </div>
+
+  <script>
+    (async () => {
+      const statusText = document.getElementById('status-text');
+      const scribeFrame = document.getElementById('scribe-frame');
+      const resultBox = document.getElementById('result-box');
+      const jsonOutput = document.getElementById('json-output');
+
+      try {
+        // 1. Fetch token from FastAPI proxy route
+        const tokenRes = await fetch('/api/scribe/token?patient_id=492&encounter_id=1017&clinician_id=38');
+        const tokenData = await tokenRes.json();
+        const sdkToken = tokenData.sdk_token;
+
+        statusText.textContent = `Token Minted: ${sdkToken.substring(0, 18)}... | Embedding AI Scribe Studio`;
+
+        // 2. Point iframe to CoreHealth vanity or embed endpoint with token
+        scribeFrame.src = `http://127.0.0.1:8000/scribe?token=${encodeURIComponent(sdkToken)}&locale=en-NG`;
+
+        // 3. Listen for postMessage events from the Scribe iframe
+        window.addEventListener('message', async (event) => {
+          if (!event.data || !event.data.type) return;
+
+          if (event.data.type === 'corehealth:ready') {
+            statusText.textContent = 'AI Scribe Studio Ready. Click "Start Dictation" to begin.';
+          } else if (event.data.type === 'corehealth:signed-off') {
+            statusText.textContent = 'Consultation note signed! Persisting to EHR backend...';
+
+            // Forward to FastAPI backend
+            const saveRes = await fetch('/api/scribe/encounters/1017/signoff', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(event.data.payload)
+            });
+            const savedData = await saveRes.json();
+
+            statusText.textContent = '✓ Note successfully saved and openEHR/FHIR compositions verified.';
+            resultBox.style.display = 'block';
+            jsonOutput.textContent = JSON.stringify(savedData, null, 2);
+          }
+        });
+      } catch (e) {
+        statusText.textContent = `Error: ${e.message}`;
+        console.error(e);
+      }
+    })();
+  </script>
+</body>
+</html>
+
