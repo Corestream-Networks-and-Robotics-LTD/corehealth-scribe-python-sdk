@@ -1,31 +1,61 @@
 # Fresh Integration Guide: Using CoreHealth Python SDK in Your Backend
 
-This guide shows how to integrate the `corehealth-scribe-sdk` Python package into Django, FastAPI, Flask, or any Python backend.
+This guide demonstrates how to integrate the `corehealth-scribe-sdk` Python package into Django, FastAPI, Flask, or background worker services.
 
 ---
 
-## Step 1: Install the Package
+## Step 1: Virtual Environment & Package Installation
+
+Always initialize a dedicated virtual environment:
 
 ```bash
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\Activate.ps1
+
+# Install SDK package
 pip install corehealth-scribe-sdk
-```
 
-Or for FastAPI support:
-```bash
-pip install "corehealth-scribe-sdk[fastapi]"
+# Or with FastAPI proxy support:
+pip install "corehealth-scribe-sdk[fastapi]" python-dotenv
 ```
 
 ---
 
-## Step 2: Initialize the Client
+## Step 2: Environment Configuration (`.env`)
+
+Create a `.env` file in your project root using the standard parameters:
+
+```ini
+CH_BASE_URL=https://corehealth.corestream.ng
+CH_CLIENT_ID=your-client-id
+CH_CLIENT_SECRET=your-client-secret
+```
+
+Load your environment variables securely:
+
+```python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+CH_BASE_URL = os.getenv("CH_BASE_URL", "https://corehealth.corestream.ng")
+CH_CLIENT_ID = os.getenv("CH_CLIENT_ID")
+CH_CLIENT_SECRET = os.getenv("CH_CLIENT_SECRET")
+```
+
+---
+
+## Step 3: Initialize the Client
 
 ```python
 from corehealth_sdk import CoreHealthClient
 
 client = CoreHealthClient(
-    base_url="https://corehealth.corestream.ng", # Or local Edge Node IP
-    client_id="partner-emr-dev",
-    client_secret="partner_dev_secret_2026",
+    base_url=CH_BASE_URL,
+    client_id=CH_CLIENT_ID,
+    client_secret=CH_CLIENT_SECRET,
 )
 ```
 

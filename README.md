@@ -22,18 +22,60 @@ The `corehealth-scribe-sdk` Python package provides a backend toolkit for health
 
 ---
 
-## Quickstart: Run the Reference Example
+## Quickstart: Virtual Environment Setup & Reference Server
 
-A working FastAPI reference application is included in `examples/fastapi-integration/`:
+A complete FastAPI reference application demonstrating proxy token minting, catalog search, and consultation sign-off is included under `examples/fastapi-integration/`.
+
+### 1. Create and Activate Virtual Environment (`venv`)
 
 ```bash
+# Navigate to the reference example
 cd examples/fastapi-integration
+
+# Create isolated Python virtual environment (Python 3.10+)
+python3 -m venv venv
+
+# Activate virtual environment
+# On Linux / macOS:
+source venv/bin/activate
+# On Windows (PowerShell):
+# .\venv\Scripts\Activate.ps1
+# On Windows (cmd):
+# venv\Scripts\activate.bat
+
+# Upgrade pip
+pip install --upgrade pip
+```
+
+### 2. Configure Environment (`.env`)
+
+```bash
+# Copy example environment configuration
+cp .env.example .env
+```
+
+Review `.env` to confirm target host and client credentials:
+
+```ini
+CH_BASE_URL=http://127.0.0.1:8000
+CH_CLIENT_ID=partner-emr-dev
+CH_CLIENT_SECRET=partner_dev_secret_2026
+PORT=3002
+```
+
+### 3. Install Dependencies and Run
+
+```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Start the reference proxy
 python main.py
 ```
-Open `http://localhost:3002` in your browser!
 
-👉 **[Read the Step-by-Step Example Walkthrough](./docs/running-the-example.md)**
+Open `http://localhost:3002` in your browser.
+
+👉 **[Read the Complete Step-by-Step Example Walkthrough](./docs/running-the-example.md)**
 
 ---
 
@@ -41,7 +83,7 @@ Open `http://localhost:3002` in your browser!
 
 | Document | Purpose |
 |---|---|
-| 📖 **[Running the Example](./docs/running-the-example.md)** | Step-by-step guide to running the FastAPI reference demo. |
+| 📖 **[Running the Example](./docs/running-the-example.md)** | Exhaustive step-by-step setup guide with venv and `.env` configuration. |
 | 🚀 **[Fresh Integration Guide](./docs/fresh-integration-guide.md)** | How to use the Python SDK in Django, FastAPI, Flask, or background workers. |
 | 🌐 **[Full Interoperability Guide](./docs/full-interoperability-guide.md)** | Complete guide to FHIR R4, openEHR ITS-REST, AQL, and NDPA APIs. |
 | 📮 **[Postman Collection](./postman/CoreHealth-Interop-Collection.json)** | 25+ ready-to-run requests covering all interop & SDK endpoints. |
@@ -51,13 +93,20 @@ Open `http://localhost:3002` in your browser!
 
 ## Installation
 
+Inside your activated virtual environment:
+
 ```bash
 pip install corehealth-scribe-sdk
 ```
 
-With FastAPI proxy support:
+With FastAPI proxy router support:
 ```bash
 pip install "corehealth-scribe-sdk[fastapi]"
+```
+
+For local development / editable installation:
+```bash
+pip install -e .
 ```
 
 ---

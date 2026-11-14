@@ -13,6 +13,14 @@ import sys
 # Ensure local corehealth_sdk package can be imported
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
+try:
+    from dotenv import load_dotenv
+    # Load .env from current directory or SDK root
+    load_dotenv(Path(__file__).parent / ".env")
+    load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
+except ImportError:
+    pass
+
 from corehealth_sdk.client import CoreHealthClient
 from corehealth_sdk.fastapi_proxy import create_scribe_router
 
@@ -54,9 +62,11 @@ def serve_consultation_screen():
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.getenv("PORT", 3002))
     print("====================================================")
-    print("Starting FastAPI Reference Scribe Proxy on :3002")
-    print("Open http://localhost:3002 in your browser")
+    print(f"Starting FastAPI Reference Scribe Proxy on :{port}")
+    print(f"Open http://localhost:{port} in your browser")
+    print(f"Connected to CoreHealth backend: {CH_BASE_URL}")
     print("====================================================")
-    uvicorn.run(app, host="0.0.0.0", port=3002)
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
