@@ -23,7 +23,7 @@ pip install "corehealth-scribe-sdk[fastapi]"
 from corehealth_sdk import CoreHealthClient
 
 client = CoreHealthClient(
-    base_url="https://api.corehealth.ng", # Or local Edge Node IP
+    base_url="https://corehealth.corestream.ng", # Or local Edge Node IP
     client_id="partner-emr-dev",
     client_secret="partner_dev_secret_2026",
 )

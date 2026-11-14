@@ -34,6 +34,6 @@ fastapi = ["fastapi>=0.100.0", "uvicorn>=0.20.0"]
 test = ["pytest>=7.0.0", "pytest-asyncio>=0.20.0"]
 
 [project.urls]
-Homepage = "https://corehealth.ng"
+Homepage = "https://corehealth.corestream.ng"
 Repository = "https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk"
 Documentation = "https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk/tree/main/docs"

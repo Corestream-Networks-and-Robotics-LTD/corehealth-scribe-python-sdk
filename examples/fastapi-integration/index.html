@@ -56,14 +56,15 @@
 
       try {
         // 1. Fetch token from FastAPI proxy route
-        const tokenRes = await fetch('/api/scribe/token?patient_id=492&encounter_id=1017&clinician_id=38');
+        const tokenRes = await fetch('/api/scribe/token?patient_id=492&encounter_id=1017&clinician_id=1&role=doctor&taxonomy=soap');
         const tokenData = await tokenRes.json();
         const sdkToken = tokenData.sdk_token;
+        const coreHealthUrl = tokenData.corehealth_base_url || 'http://127.0.0.1:8000';
 
         statusText.textContent = `Token Minted: ${sdkToken.substring(0, 18)}... | Embedding AI Scribe Studio`;
 
         // 2. Point iframe to CoreHealth vanity or embed endpoint with token
-        scribeFrame.src = `http://127.0.0.1:8000/scribe?token=${encodeURIComponent(sdkToken)}&locale=en-NG`;
+        scribeFrame.src = `${coreHealthUrl}/scribe?token=${encodeURIComponent(sdkToken)}&locale=en-NG&role=doctor&taxonomy=soap`;
 
         // 3. Listen for postMessage events from the Scribe iframe
         window.addEventListener('message', async (event) => {

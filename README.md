@@ -8,12 +8,15 @@ The `corehealth-scribe-sdk` Python package provides a backend toolkit for health
 
 ## Key Features
 
+- **Compressed Scribe Catalog Protocol (CSCP)**: Built-in `CoreHealthClient.compress_catalog(items)` utility for compressing your EMR's products and services using compact `#CAT:id|type|name` DSL or gzip-base64. Delivers a 10x-15x reduction in token size (~3 tokens per item) for efficient LLM context injection.
+- **Suggested Orders Deck & Prescriptions Staging**: Direct backend methods for catalog discovery (`get_categories`, `search_catalog_items`), processing voice transcripts with grounded catalogs (`process_dictation`), and signing consultations with clinician-approved orders (`sign_session`).
+- **Dynamic Medical Taxonomy Conversion**: Losslessly convert clinical notes across doctor (`SOAP`, `Traditional Clerking`, `POMR`), nurse (`Focus DAR`, `SBAR`, `SOAPIE`), and maternity (`ANC`, `Labor`, `PNC`) formats via `convert_format()`.
 - **Ephemeral Session & Zero Data Retention Guarantee**:
   - **Zero Persistent Storage in SDK Gateway**: No patient clinical data is stored or cached beyond the active in-memory request lifecycle.
   - **Capture the Callback**: If your application fails to capture the sign-off event or callback, the ephemeral session data terminates and a fresh session request is required.
   - **PII-Stripped Clinical Context (`patient_summary`)**: You can supply a de-identified patient brief (chronic history, allergies, baseline vitals) to guide the scribe. All context is sanitized per NDPA 2023 statutory standards.
 - **Secure Token Minting**: Backend exchange of client credentials for short-lived session tokens (`SKT_...`) to keep API keys away from client browsers.
-- **FastAPI / Starlette Proxy Router**: Pre-built router to mount in FastAPI applications with a single line of code (`app.include_router(create_scribe_router(client))`).
+- **FastAPI / Starlette Proxy Router**: Pre-built router to mount in FastAPI applications with a single line of code (`app.include_router(create_scribe_router(client))`), complete with `/catalogs/items`, `/categories`, `/convert-format`, and `/signoff` endpoints.
 - **Standardized Interoperability**: Direct client methods for querying openEHR Archetype Query Language (AQL) and searching/mutating HL7 FHIR R4 resources.
 - **Statutory Privacy**: Integrates with Nigeria Data Protection Act (NDPA 2023) consent management and cross-border data transfer safeguards.
 
@@ -65,7 +68,7 @@ pip install "corehealth-scribe-sdk[fastapi]"
 from corehealth_sdk import CoreHealthClient
 
 client = CoreHealthClient(
-    base_url="https://api.corehealth.ng",
+    base_url="https://corehealth.corestream.ng",
     client_id="partner-emr-dev",
     client_secret="partner_dev_secret_2026",
 )
