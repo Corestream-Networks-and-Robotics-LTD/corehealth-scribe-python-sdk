@@ -58,8 +58,8 @@ Review `.env` to confirm target host and client credentials:
 
 ```ini
 CH_BASE_URL=http://127.0.0.1:8000
-CH_CLIENT_ID=partner-emr-dev
-CH_CLIENT_SECRET=partner_dev_secret_2026
+CH_CLIENT_ID=your_client_id_here
+CH_CLIENT_SECRET=your_client_secret_here
 PORT=3002
 ```
 
@@ -91,21 +91,67 @@ Open `http://localhost:3002` in your browser.
 
 ---
 
+## How to Test AI Scribe & Interoperability APIs
+
+This SDK repository contains everything needed to thoroughly test both the AI Scribe Studio and the full suite of health data interoperability APIs.
+
+### 1. Testing AI Scribe (Frontend UI + FastAPI Proxy)
+
+- **Interactive In-Browser Testing (`http://localhost:3002`)**:
+  ```bash
+  cd examples/fastapi-integration
+  python3 -m venv venv
+  source venv/bin/activate  # On Windows: .\venv\Scripts\Activate.ps1
+  pip install -r requirements.txt
+  cp .env.example .env
+  python main.py
+  ```
+  Open `http://localhost:3002` in your browser. Click **Load Sample**, click **Process Note**, and click **Accept & Sign** to verify the sandboxed iFrame bridge and signed JSON output.
+- **Automated 6-Step Python Integration Test**:
+  ```bash
+  cd examples/fastapi-integration
+  python test_live.py
+  ```
+  Validates token minting, categories discovery, CSCP catalog compression, grounded LLM dictation, lossless taxonomy conversion, and openEHR/FHIR sign-off against the live CoreHealth backend.
+
+### 2. Testing Interoperability APIs (FHIR R4, openEHR & NDPA)
+
+- **Ready-to-Run Postman Collection**:
+  Import [`postman/CoreHealth-Interop-Collection.json`](./postman/CoreHealth-Interop-Collection.json) into Postman. It contains 25+ pre-configured requests with automated test assertions and token auto-population across:
+  - `00. Authentication` (Sanctum PAT acquire & token verify)
+  - `01. NDPA 2023 Statutory Privacy` (Treatment & Cloud AI consents)
+  - `02. HL7 FHIR R4` (CapabilityStatement, Patient, Observation with LOINC, MedicationRequest with WHO ATC, ServiceRequest)
+  - `03. openEHR ITS-REST` (EHR create, read, and AQL archetype queries)
+  - `04. OpenEMR REST Compatibility` (Patient list and C-CDA XML export)
+  - `05. AI Scribe SDK` (Full lifecycle: token issue, CSCP compression, dictation, taxonomy conversion, sign-off, compositions, and revocation)
+- **OpenAPI 3.0 Contract Testing**:
+  Import [`openapi/corehealth-interop-openapi.json`](./openapi/corehealth-interop-openapi.json) into Swagger Editor, Postman, Insomnia, or your API testing framework.
+- **Step-by-Step Clinical API Guide**:
+  Read [`docs/full-interoperability-guide.md`](./docs/full-interoperability-guide.md) for concrete HTTP requests, LOINC/ATC code bindings, and AQL queries.
+
+---
+
 ## Installation
 
-Inside your activated virtual environment:
+Install the package directly into your Python virtual environment:
 
 ```bash
-pip install corehealth-scribe-sdk
+# Standard installation
+pip install git+https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git
+
+# With FastAPI proxy router dependencies:
+pip install "corehealth-scribe-sdk[fastapi] @ git+https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git@main"
 ```
 
-With FastAPI proxy router support:
-```bash
-pip install "corehealth-scribe-sdk[fastapi]"
+In your project's `requirements.txt`:
+```text
+corehealth-scribe-sdk @ git+https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git@main
 ```
 
-For local development / editable installation:
+For local development or git clone:
 ```bash
+git clone https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git
+cd corehealth-scribe-python-sdk
 pip install -e .
 ```
 
@@ -118,8 +164,8 @@ from corehealth_sdk import CoreHealthClient
 
 client = CoreHealthClient(
     base_url="https://corehealth.corestream.ng",
-    client_id="partner-emr-dev",
-    client_secret="partner_dev_secret_2026",
+    client_id="your_client_id_here",
+    client_secret="your_client_secret_here",
 )
 
 # Mint ephemeral token for browser session

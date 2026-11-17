@@ -81,9 +81,9 @@ python -m pip install --upgrade pip
    # CoreHealth Edge or Cloud backend URL (without trailing slash)
    CH_BASE_URL=http://127.0.0.1:8000
 
-   # Client Credentials issued in CoreHealth Admin -> Interoperability
-   CH_CLIENT_ID=partner-emr-dev
-   CH_CLIENT_SECRET=partner_dev_secret_2026
+   # Client Credentials issued in CoreHealth Admin -> Hospital Configuration -> AI Scribe & SDK
+   CH_CLIENT_ID=your_client_id_here
+   CH_CLIENT_SECRET=your_client_secret_here
 
    # FastAPI server port
    PORT=3002

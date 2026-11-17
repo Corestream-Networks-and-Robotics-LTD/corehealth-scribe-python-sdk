@@ -58,9 +58,9 @@ Review `.env` and configure your CoreHealth connection parameters:
 # CoreHealth Backend Base URL (Edge or Cloud)
 CH_BASE_URL=http://127.0.0.1:8000
 
-# Client Credentials (from CoreHealth Admin -> Interoperability)
-CH_CLIENT_ID=partner-emr-dev
-CH_CLIENT_SECRET=partner_dev_secret_2026
+# Client Credentials (from CoreHealth Admin -> Hospital Configuration -> AI Scribe & SDK)
+CH_CLIENT_ID=your_client_id_here
+CH_CLIENT_SECRET=your_client_secret_here
 
 # FastAPI Proxy Port
 PORT=3002

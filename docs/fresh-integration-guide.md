@@ -13,11 +13,11 @@ Always initialize a dedicated virtual environment:
 python3 -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\Activate.ps1
 
-# Install SDK package
-pip install corehealth-scribe-sdk
+# Install SDK from Git repository
+pip install git+https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git
 
 # Or with FastAPI proxy support:
-pip install "corehealth-scribe-sdk[fastapi]" python-dotenv
+pip install "corehealth-scribe-sdk[fastapi] @ git+https://github.com/Corestream-Networks-and-Robotics-LTD/corehealth-scribe-python-sdk.git@main" python-dotenv
 ```
 
 ---
@@ -82,7 +82,7 @@ token_data = client.get_scribe_token(
 
 ## Step 4: One-Line Mounting in FastAPI Backends
 
-If you use FastAPI, you can mount our pre-configured proxy router directly:
+If you use FastAPI, mount the pre-configured proxy router directly:
 
 ```python
 from fastapi import FastAPI
