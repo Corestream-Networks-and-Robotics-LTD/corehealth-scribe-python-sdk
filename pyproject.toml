@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "corehealth-scribe-sdk"
-version = "1.0.0"
+version = "1.0.1"
 description = "Corehealth by CorestreamNG — AI Scribe Python Backend SDK & Interoperability Client (openEHR & FHIR R4)"
 readme = "README.md"
 requires-python = ">=3.9"
